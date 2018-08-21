@@ -1,0 +1,19 @@
+{
+    "name": "cold/weather",
+    "description": "a weather sdk",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "cold",
+            "email": "13264706948@sina.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Cold\\Weather\\": "./src"
+        }
+    },
+    "require": {
+        "guzzlehttp/guzzle": "^6.3"
+    }
+}
