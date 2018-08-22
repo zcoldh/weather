@@ -3,12 +3,15 @@
 namespace Cold\Weather;
 
 
+use Cold\Weather\Exceptions\HttpException;
+use Cold\Weather\Exceptions\InvalidArgumentException;
 use GuzzleHttp\Client;
 
 class Weather
 {
     protected $key;
     protected $guzzleOptions = [];
+    const WEATHER_REQUEST_URL = 'https://restapi.amap.com/v3/weather/weatherInfo';
 
     public function __construct(string $key)
     {
@@ -27,7 +30,13 @@ class Weather
 
     public function getWeather($city, string $type = 'base', string $format = 'json')
     {
-        $url = 'https://restapi.amap.com/v3/weather/weatherInfo';
+        if(\in_array(\strtolower($format), ['xml', 'json'])){
+            throw new InvalidArgumentException('Invalid response format: '.$format);
+        }
+
+        if(\in_array(\strtolower($type), ['all', 'base'])){
+            throw new InvalidArgumentException('Invalid type value(base/all): '.$type);
+        }
 
         $query = array_filter([
             'key' => $this->key,
@@ -36,10 +45,14 @@ class Weather
             'extensions' => $type,
         ]);
 
-        $response = $this->getHttpClient()->get($url, [
-            'query' => $query,
-        ])->getBody()->getContents();
+        try{
+            $response = $this->getHttpClient()->get(self::WEATHER_REQUEST_URL, [
+                'query' => $query,
+            ])->getBody()->getContents();
 
-        return 'json' === $format ? \json_decode($response, true) : $response;
+            return 'json' === $format ? \json_decode($response, true) : $response;
+        } catch (\Exception $e){
+            throw new HttpException($e->getMessage(), $e->getCode(), $e);
+        }
     }
 }
