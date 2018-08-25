@@ -17,7 +17,7 @@ $ composer require Cold/weather -vvv
 ## 使用
 
 ```php
-use Overtrue\Weather\Weather;
+use Cold\Weather\Weather;
 
 $key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
