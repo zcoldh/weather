@@ -6,7 +6,7 @@
 ## 安装
 
 ```sh
-$ composer require Cold/weather -vvv
+$ composer require cold/weather -vvv
 ```
 
 ## 配置
@@ -17,7 +17,7 @@ $ composer require Cold/weather -vvv
 ## 使用
 
 ```php
-use Overtrue\Weather\Weather;
+use Cold\Weather\Weather;
 
 $key = 'xxxxxxxxxxxxxxxxxxxxxxxxxxx';
 
