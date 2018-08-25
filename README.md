@@ -6,7 +6,7 @@
 ## 安装
 
 ```sh
-$ composer require Cold/weather -vvv
+$ composer require cold/weather -vvv
 ```
 
 ## 配置
