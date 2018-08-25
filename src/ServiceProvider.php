@@ -2,7 +2,7 @@
 
 namespace  Cold\Weather;
 
-class  ServiceProvider extends \Illuminate\Support\ServoceProvider
+class  ServiceProvider extends \Illuminate\Support\ServiceProvider
 {
     protected $defer = true;
 
