@@ -65,13 +65,18 @@ class Weather
      * @throws \Cold\Weather\Exceptions\HttpException
      * @throws \Cold\Weather\Exceptions\InvalidArgumentException
      */
-    public function getWeather($city, string $type = 'base', string $format = 'json')
+    public function getWeather($city, string $type = 'live', string $format = 'json')
     {
+        $types = [
+            'live' => 'base',
+            'forcast' => 'all',
+        ];
+
         if(!\in_array(\strtolower($format), ['xml', 'json'])){
             throw new InvalidArgumentException('Invalid response format: '.$format);
         }
 
-        if(!\in_array(\strtolower($type), ['all', 'base'])){
+        if(!\array_key_exists(\strtolower($type), $types)){
             throw new InvalidArgumentException('Invalid type value(base/all): '.$type);
         }
 
