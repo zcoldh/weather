@@ -1,5 +1,14 @@
 <?php
 
+/*
+ * This file is part of the overtrue/weather.
+ *
+ * (c) Cold<i@cold.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Cold\Weather\Tests;
 
 use GuzzleHttp\Client;
@@ -10,7 +19,6 @@ use Cold\Weather\Exceptions\HttpException;
 use Cold\Weather\Exceptions\InvalidArgumentException;
 use Cold\Weather\Weather;
 use PHPUnit\Framework\TestCase;
-
 
 class WeatherTest extends TestCase
 {
@@ -147,5 +155,4 @@ class WeatherTest extends TestCase
         // 断言正确传参并返回
         $this->assertSame(['success' => true], $w->getForcastsWeather('深圳'));
     }
-
 }
