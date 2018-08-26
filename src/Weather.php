@@ -1,28 +1,56 @@
 <?php
 
+/*
+ * This file is part of the overtrue/weather.
+ *
+ * (c) overtrue <i@overtrue.me>
+ *
+ * This source file is subject to the MIT license that is bundled
+ * with this source code in the file LICENSE.
+ */
+
 namespace Cold\Weather;
 
-
+use GuzzleHttp\Client;
 use Cold\Weather\Exceptions\HttpException;
 use Cold\Weather\Exceptions\InvalidArgumentException;
-use GuzzleHttp\Client;
 
+/**
+ * Class Weather.
+ */
 class Weather
 {
+    /**
+     * @var string
+     */
     protected $key;
-    protected $guzzleOptions = [];
-    const WEATHER_REQUEST_URL = 'https://restapi.amap.com/v3/weather/weatherInfo';
 
-    public function __construct(string $key)
+    /**
+     * @var array
+     */
+    protected $guzzleOptions = [];
+
+    /**
+     * Weather constructor.
+     *
+     * @param string $key
+     */
+    public function __construct($key)
     {
         $this->key = $key;
     }
 
+    /**
+     * @return \GuzzleHttp\Client
+     */
     public function getHttpClient()
     {
         return new Client($this->guzzleOptions);
     }
 
+    /**
+     * @param array $options
+     */
     public function setGuzzleOptions(array $options)
     {
         $this->guzzleOptions = $options;
@@ -49,12 +77,13 @@ class Weather
      * @return \Psr\Http\Message\ResponseInterface
      *
      * @throws \Cold\Weather\Exceptions\HttpException
-     * @throws \COld\Weather\Exceptions\InvalidArgumentException
+     * @throws \Cold\Weather\Exceptions\InvalidArgumentException
      */
     public function getForcastsWeather($city, $format = 'json')
     {
         return $this->getWeather($city, 'all', $format);
     }
+
     /**
      * @param string $city
      * @param string $type
@@ -65,18 +94,15 @@ class Weather
      * @throws \Cold\Weather\Exceptions\HttpException
      * @throws \Cold\Weather\Exceptions\InvalidArgumentException
      */
-    public function getWeather($city, string $type = 'live', string $format = 'json')
+    public function getWeather($city, $type = 'base', $format = 'json')
     {
-        $types = [
-            'live' => 'base',
-            'forcast' => 'all',
-        ];
+        $url = 'https://restapi.amap.com/v3/weather/weatherInfo';
 
-        if(!\in_array(\strtolower($format), ['xml', 'json'])){
+        if (!\in_array(\strtolower($format), ['xml', 'json'])) {
             throw new InvalidArgumentException('Invalid response format: '.$format);
         }
 
-        if(!\array_key_exists(\strtolower($type), $types)){
+        if (!\in_array(\strtolower($type), ['base', 'all'])) {
             throw new InvalidArgumentException('Invalid type value(base/all): '.$type);
         }
 
@@ -87,13 +113,13 @@ class Weather
             'extensions' => $type,
         ]);
 
-        try{
-            $response = $this->getHttpClient()->get(self::WEATHER_REQUEST_URL, [
+        try {
+            $response = $this->getHttpClient()->get($url, [
                 'query' => $query,
             ])->getBody()->getContents();
 
             return 'json' === $format ? \json_decode($response, true) : $response;
-        } catch (\Exception $e){
+        } catch (\Exception $e) {
             throw new HttpException($e->getMessage(), $e->getCode(), $e);
         }
     }

@@ -61,7 +61,7 @@ class WeatherTest extends TestCase
                 'city' => '深圳',
                 'output' => 'json',
                 'extensions' => 'base',
-            ]
+            ],
         ])->andReturn($response);
 
         // 将 `getHttpClient` 方法替换为上面创建的 http client 为返回值的模拟方法。
@@ -127,4 +127,25 @@ class WeatherTest extends TestCase
         // 设置参数后，timeout 为 5000
         $this->assertSame(5000, $w->getHttpClient()->getConfig('timeout'));
     }
+
+    public function testGetLiveWeather()
+    {
+        // 将 getWeather 接口模拟为返回固定内容，以测试参数传递是否正确
+        $w = \Mockery::mock(Weather::class, ['mock-key'])->makePartial();
+        $w->expects()->getWeather('深圳', 'base', 'json')->andReturn(['success' => true]);
+
+        // 断言正确传参并返回
+        $this->assertSame(['success' => true], $w->getLiveWeather('深圳'));
+    }
+
+    public function testGetForcastsWeather()
+    {
+        // 将 getWeather 接口模拟为返回固定内容，以测试参数传递是否正确
+        $w = \Mockery::mock(Weather::class, ['mock-key'])->makePartial();
+        $w->expects()->getWeather('深圳', 'all', 'json')->andReturn(['success' => true]);
+
+        // 断言正确传参并返回
+        $this->assertSame(['success' => true], $w->getForcastsWeather('深圳'));
+    }
+
 }
